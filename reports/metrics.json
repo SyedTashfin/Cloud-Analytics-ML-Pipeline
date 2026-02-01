@@ -1,0 +1,38 @@
+{
+  "split_method": "random",
+  "train_start": null,
+  "train_end": null,
+  "test_start": null,
+  "test_end": null,
+  "pct_positive_train": 0.060958,
+  "pct_positive_test": 0.060896,
+  "threshold_used": 0.5,
+  "label_column": "purchase_in_session",
+  "features_used": [
+    "total_events",
+    "num_views",
+    "num_carts",
+    "unique_products",
+    "unique_categories",
+    "session_duration_seconds",
+    "avg_price_viewed",
+    "max_price_viewed",
+    "hour_of_day",
+    "day_of_week",
+    "is_weekend"
+  ],
+  "auc": 0.872768,
+  "accuracy": 0.939211,
+  "precision": 0.505447,
+  "recall": 0.081727,
+  "f1": 0.140703,
+  "positive_rate": 0.060896,
+  "confusion_matrix": {
+    "tn": 4302078,
+    "fp": 22424,
+    "fn": 257504,
+    "tp": 22918
+  },
+  "evaluation_set": "test",
+  "suspiciously_perfect_metrics": false
+}

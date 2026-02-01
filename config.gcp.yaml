@@ -1,0 +1,90 @@
+paths:
+  data_raw: "gs://clickstream-bigdata-raw"
+  data_interim: "gs://clickstream-bigdata-processed/interim"
+  data_processed: "gs://clickstream-bigdata-processed"
+  reports: "gs://clickstream-bigdata-reports"
+  figures: "gs://clickstream-bigdata-reports/figures"
+  models: "gs://clickstream-bigdata-reports/models"
+
+dataset:
+  name: ecommerce-clickstream
+  months:
+    - "2019-Oct"
+    - "2019-Nov"
+  file_pattern: "{month}.csv"
+  raw_filename_template: "{month}.csv"
+  raw_dir: "gs://clickstream-bigdata-raw"
+  url_template: ""
+  rows_per_month: 10000
+  seed: 42
+  currency: "USD"
+  event_types:
+    - "view"
+    - "cart"
+    - "purchase"
+  event_type_weights:
+    - 0.82
+    - 0.13
+    - 0.05
+  events_dir: "gs://clickstream-bigdata-processed/events_parquet"
+  session_features_dir: "gs://clickstream-bigdata-processed/session_features"
+  train_dir: "train"
+  test_dir: "test"
+
+features:
+  numeric:
+    - "total_events"
+    - "num_views"
+    - "num_carts"
+    - "num_purchases"
+    - "unique_products"
+    - "unique_categories"
+    - "session_duration_seconds"
+    - "avg_price_viewed"
+    - "max_price_viewed"
+    - "hour_of_day"
+    - "day_of_week"
+    - "is_weekend"
+  label: "purchase_in_session"
+  features_col: "features"
+
+leakage_columns:
+  - "purchase_in_session"
+  - "has_purchase"
+  - "purchase_count"
+  - "event_purchase_count"
+  - "event_type_purchase"
+
+split:
+  method: "time"
+  time_column: "session_date"
+  train_ratio: 0.8
+  seed: 42
+
+training:
+  max_iter: 50
+  reg_param: 0.01
+  elastic_net_param: 0.0
+
+evaluation:
+  threshold: 0.5
+
+processing:
+  overwrite: true
+  smoke_row_limit: 2000000
+  max_days_per_run: 7
+  shuffle_partitions: 64
+  max_output_files: 200
+  coalesce_before_write: true
+
+spark:
+  app_name: "clickstream-gcp"
+  master: ""
+  shuffle_partitions: 64
+  timezone: "UTC"
+
+reports:
+  dir: "gs://clickstream-bigdata-reports"
+
+models:
+  dir: "gs://clickstream-bigdata-reports/models"

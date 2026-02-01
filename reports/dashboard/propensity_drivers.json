@@ -1,0 +1,63 @@
+{
+  "source": "model_coefficients",
+  "score_label": "weight",
+  "positive": [
+    {
+      "feature": "num_carts",
+      "weight": 0.883219,
+      "description": "Number of add-to-cart actions in the session."
+    },
+    {
+      "feature": "is_weekend",
+      "weight": 0.175394,
+      "description": "Indicator that the session started on a weekend."
+    },
+    {
+      "feature": "total_events",
+      "weight": 0.07796,
+      "description": "Total clickstream events in the session."
+    },
+    {
+      "feature": "avg_price_viewed",
+      "weight": 0.00012,
+      "description": "Average price of viewed products in the session."
+    }
+  ],
+  "negative": [
+    {
+      "feature": "day_of_week",
+      "weight": -0.074383,
+      "description": "Session start day of week (1=Sun)."
+    },
+    {
+      "feature": "unique_products",
+      "weight": -0.071167,
+      "description": "Distinct products interacted with in the session."
+    },
+    {
+      "feature": "unique_categories",
+      "weight": -0.071053,
+      "description": "Distinct product categories interacted with."
+    },
+    {
+      "feature": "num_views",
+      "weight": -0.034785,
+      "description": "Number of product views in the session."
+    },
+    {
+      "feature": "hour_of_day",
+      "weight": -0.013833,
+      "description": "Session start hour (0-23)."
+    },
+    {
+      "feature": "max_price_viewed",
+      "weight": -0.000198,
+      "description": "Maximum price of viewed products in the session."
+    },
+    {
+      "feature": "session_duration_seconds",
+      "weight": -1e-06,
+      "description": "Session duration in seconds."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "total_events": 109950731,
+  "total_users": 5316649,
+  "total_sessions": 23016650,
+  "total_purchases": 1659788,
+  "total_revenue": 505152392.77,
+  "avg_order_value": 304.35,
+  "conversion_rate": 0.060945,
+  "avg_session_duration_seconds": 1100.39,
+  "avg_events_per_session": 4.78,
+  "min_event_date": "2019-10-01",
+  "max_event_date": "2019-11-30",
+  "min_purchase_price": 0.77,
+  "max_purchase_price": 2574.07,
+  "currency": "USD"
+}

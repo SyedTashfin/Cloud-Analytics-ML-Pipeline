@@ -1,0 +1,15 @@
+name: clickstream
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pyspark=3.5.1
+  - pandas=2.2.2
+  - pyarrow=15.0.2
+  - numpy=1.26.4
+  - scikit-learn=1.4.2
+  - pyyaml=6.0.1
+  - tqdm=4.66.2
+  - matplotlib=3.8.3
+  - streamlit=1.37.0
+  - plotly=5.22.0

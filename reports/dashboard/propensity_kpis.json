@@ -1,0 +1,8 @@
+{
+  "available": true,
+  "predicted_conversion_rate": 0.060953,
+  "actual_session_conversion_rate": 0.060945,
+  "calibration_gap": 7e-06,
+  "high_propensity_share": 0.009862,
+  "threshold": 0.5
+}

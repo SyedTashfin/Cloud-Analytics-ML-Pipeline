@@ -1,0 +1,8 @@
+{
+  "input_rows": 109950743,
+  "output_rows": 109950743,
+  "distinct_users": 5316649,
+  "distinct_sessions": 23016650,
+  "min_event_time": "2019-10-01 02:00:00",
+  "max_event_time": "2019-12-01 00:59:59"
+}
