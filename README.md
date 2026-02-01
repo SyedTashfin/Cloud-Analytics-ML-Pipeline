@@ -329,12 +329,31 @@ The Makefile exports `PYTHONPATH=src` automatically.
 
 ## Dataset
 
-Raw clickstream dataset is stored in Google Cloud Storage:
+Option A: Public GCS dataset (no login required)
 
-- gs://clickstream-bigdata-raw
+- Bucket: gs://clickstream-bigdata-raw
+- Objects:
+- gs://clickstream-bigdata-raw/2019-Nov.csv
+- gs://clickstream-bigdata-raw/2019-Oct.csv
+- HTTPS downloads:
+- https://storage.googleapis.com/clickstream-bigdata-raw/2019-Nov.csv
+- https://storage.googleapis.com/clickstream-bigdata-raw/2019-Oct.csv
 
-To download locally (downloads into ./data which is git-ignored):
+Download with the helper script (defaults to the public bucket and downloads into `data/raw`, which is git-ignored):
 
 ```bash
 ./scripts/download_data.sh
 ```
+
+Download from a different public GCS prefix or bucket:
+
+```bash
+GCS_DATASET_URI=gs://your-bucket/your-prefix ./scripts/download_data.sh
+```
+
+Option B: Bring your own dataset
+
+1) Place raw CSV files in `data/raw/`.
+2) Ensure filenames match `dataset.file_pattern` in `config.yaml` (default: `{month}.csv`).
+3) Run the pipeline as usual.
+
