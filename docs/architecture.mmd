@@ -1,0 +1,30 @@
+flowchart LR
+  A[Raw clickstream CSVs\npublic GCS or BYO] --> B[to_parquet\nclean + partition]
+  B --> C[build_features\nsession features + labels]
+  C --> D[train\nSpark MLlib logreg]
+  D --> E[evaluate\nmetrics + plots]
+  E --> F[export_dashboard_data\nJSON + parquet]
+  F --> G[Streamlit dashboard]
+
+  subgraph Storage
+    S1[data/processed\nparquet]:::store
+    S2[models/logreg]:::store
+    S3[reports/\nmetrics + figures]:::store
+  end
+
+  B --> S1
+  C --> S1
+  D --> S2
+  E --> S3
+  F --> S3
+
+  subgraph Execution
+    X1[Local Spark]\n    X2[Dataproc Serverless]
+  end
+
+  A -. config.gcp.yaml .-> X2
+  A -. config.yaml .-> X1
+  X1 --> B
+  X2 --> B
+
+  classDef store fill:#0f172a,stroke:#38bdf8,color:#e2e8f0

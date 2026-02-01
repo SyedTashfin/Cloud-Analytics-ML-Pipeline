@@ -1,5 +1,22 @@
 # E-Commerce Clickstream Analytics (PySpark)
 
+[![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![PySpark](https://img.shields.io/badge/PySpark-3.x-E25A1C?logo=apache-spark&logoColor=white)](https://spark.apache.org/)
+[![GCP Dataproc](https://img.shields.io/badge/GCP-Dataproc-4285F4?logo=googlecloud&logoColor=white)](https://cloud.google.com/dataproc)
+[![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+Case study docs: [EN](docs/case-study.md) • [FR](docs/case-study.fr.md)  
+Quick one‑pager: [EN](docs/one-pager.md) • [FR](docs/one-pager.fr.md)
+
+## Why this exists / What problem it solves
+
+- Local analytics pipelines often drift from cloud outputs, breaking trust in dashboards.
+- Config and path changes create “same code, different results” problems.
+- Feature leakage inflates metrics and masks real‑world model performance.
+- Heavy recomputation makes iteration slow and costly.
+- Teams need a repeatable, audit‑friendly run contract across environments.
+
 Reproducible, end-to-end clickstream analytics pipeline built on PySpark. It
 ingests raw e-commerce event logs, produces session-level features, trains and
 evaluates a baseline conversion model, and exports lightweight aggregates for a
@@ -15,6 +32,18 @@ Dataproc Serverless with a consistent configuration model.
 - Metrics, figures, and dashboard-ready aggregates in `reports/`
 - Local and GCP execution paths wired through the Makefile
 
+## Table of contents
+
+- [Case study (EN)](docs/case-study.md)
+- [Case study (FR)](docs/case-study.fr.md)
+- [Demo script](docs/demo-script.md)
+- [Architecture & data flow](#architecture--data-flow)
+- [What to review (for recruiters)](#what-to-review-for-recruiters)
+- [Reproducibility contract](#reproducibility-contract)
+- [Dataset strategy](#dataset-strategy)
+- [Local vs GCP parity](#local-vs-gcp-parity)
+- [Limitations & next improvements](#limitations--next-improvements)
+
 ## 3-minute Quickstart
 
 ```bash
@@ -24,14 +53,39 @@ make rerun_all_force
 make dashboard
 ```
 
-## For reviewers
+## What to review (for recruiters)
 
-- `src/clickstream/pipelines/to_parquet.py` (ingestion + cleaning)
-- `src/clickstream/pipelines/build_features.py` (session features)
-- `src/clickstream/pipelines/train.py` (model training + split logic)
-- `src/clickstream/pipelines/export_dashboard_data.py` (dashboard aggregates)
-- `scripts/gcp_submit.sh` and `scripts/gcp_run_all.sh` (Dataproc Serverless)
-- `dashboard/app.py` (Streamlit UI)
+- [`src/clickstream/pipelines/to_parquet.py`](src/clickstream/pipelines/to_parquet.py) — schema enforcement + parquet partitioning
+- [`src/clickstream/pipelines/build_features.py`](src/clickstream/pipelines/build_features.py) — sessionization + features + labels
+- [`src/clickstream/pipelines/train.py`](src/clickstream/pipelines/train.py) — MLlib pipeline + leakage filtering + splits
+- [`src/clickstream/pipelines/export_dashboard_data.py`](src/clickstream/pipelines/export_dashboard_data.py) — dashboard aggregates
+- [`config.yaml`](config.yaml) + [`config.gcp.yaml`](config.gcp.yaml) — config‑only portability
+
+## Architecture & data flow
+
+ASCII (quick scan):
+
+```
+raw CSVs
+  -> to_parquet (clean + partition)
+    -> session_features (aggregate + label)
+      -> train/test split + model
+        -> evaluation metrics + plot
+          -> dashboard aggregates (JSON + parquet)
+            -> Streamlit app
+```
+
+Mermaid (docs/architecture.mmd):
+
+```mermaid
+flowchart LR
+  A[Raw clickstream CSVs] --> B[to_parquet]
+  B --> C[build_features]
+  C --> D[train]
+  D --> E[evaluate]
+  E --> F[export_dashboard_data]
+  F --> G[Streamlit dashboard]
+```
 
 ## Pipeline at a glance
 
@@ -258,6 +312,11 @@ After a full local run, you should see:
 Note: `reports/` and `models/` are committed to provide example outputs; regenerate
 from scratch with `make rerun_all_force` (or `make run_all` after data download).
 
+### Visuals (low effort, high impact)
+
+- Metrics plot: `reports/figures/metrics.png`
+- Dashboard screenshot: capture after `make dashboard` and place in `docs/screenshots/`
+
 ## Dashboard
 
 The Streamlit app reads only precomputed aggregates (fast and laptop-friendly).
@@ -347,6 +406,47 @@ PYTHONPATH=src python -m clickstream.pipelines.to_parquet --config config.yaml
 ```
 
 The Makefile exports `PYTHONPATH=src` automatically.
+
+## Reproducibility contract
+
+**Deterministic / controlled**
+- All paths and processing settings are pinned in `config.yaml` / `config.gcp.yaml`.
+- Feature columns and leakage denylist are explicit in config.
+- Outputs land in stable artifact locations (`reports/`, `models/`).
+
+**Potentially non‑deterministic**
+- Random split when no time column is available.
+- Minor Spark execution variance between local and serverless environments.
+
+**Rerun contract**
+```bash
+make rerun_all_force
+```
+
+## Dataset strategy
+
+Why externalize the dataset:
+- Keeps the repo light and compliant (no large or private data committed).
+- Enables deterministic, public reproduction for reviewers.
+- Supports BYO data with config-only changes.
+
+## Local vs GCP parity
+
+The pipeline is portable by configuration:
+- `config.yaml` → local paths and Spark settings
+- `config.gcp.yaml` → `gs://` paths and Dataproc settings
+- No code changes are required to switch environments
+
+## Limitations & next improvements
+
+- Baseline model only (logistic regression).
+- No experiment tracking server or model registry.
+- Dashboard uses precomputed aggregates (not real‑time).
+
+Next improvements:
+- Add MLflow tracking + registry.
+- Add CI checks that validate output artifacts.
+- Scheduled Dataproc runs + monitoring alerts.
 
 ## Dataset
 
