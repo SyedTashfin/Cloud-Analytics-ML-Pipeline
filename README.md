@@ -15,6 +15,24 @@ Dataproc Serverless with a consistent configuration model.
 - Metrics, figures, and dashboard-ready aggregates in `reports/`
 - Local and GCP execution paths wired through the Makefile
 
+## 3-minute Quickstart
+
+```bash
+make setup
+./scripts/download_data.sh
+make rerun_all_force
+make dashboard
+```
+
+## For reviewers
+
+- `src/clickstream/pipelines/to_parquet.py` (ingestion + cleaning)
+- `src/clickstream/pipelines/build_features.py` (session features)
+- `src/clickstream/pipelines/train.py` (model training + split logic)
+- `src/clickstream/pipelines/export_dashboard_data.py` (dashboard aggregates)
+- `scripts/gcp_submit.sh` and `scripts/gcp_run_all.sh` (Dataproc Serverless)
+- `dashboard/app.py` (Streamlit UI)
+
 ## Pipeline at a glance
 
 ```
@@ -104,7 +122,7 @@ raw CSVs
 
 ## Prerequisites
 
-- Python 3.11 (local or conda)
+- Python 3.9+ (tested on 3.9.6)
 - Java 8 or 11 for Spark
 - `pyspark` (installed via requirements or conda)
 - Optional: Google Cloud SDK (`gcloud`, `gsutil`) for GCP runs
@@ -237,6 +255,9 @@ After a full local run, you should see:
 - `reports/figures/metrics.png`: metrics visualization
 - `reports/dashboard/`: JSON + parquet aggregates for Streamlit
 
+Note: `reports/` and `models/` are committed to provide example outputs; regenerate
+from scratch with `make rerun_all_force` (or `make run_all` after data download).
+
 ## Dashboard
 
 The Streamlit app reads only precomputed aggregates (fast and laptop-friendly).
@@ -331,13 +352,13 @@ The Makefile exports `PYTHONPATH=src` automatically.
 
 Option A: Public GCS dataset (no login required)
 
-- Bucket: gs://clickstream-bigdata-raw
+- Bucket: `gs://clickstream-bigdata-raw`
 - Objects:
-- gs://clickstream-bigdata-raw/2019-Nov.csv
-- gs://clickstream-bigdata-raw/2019-Oct.csv
+  - `gs://clickstream-bigdata-raw/2019-Oct.csv`
+  - `gs://clickstream-bigdata-raw/2019-Nov.csv`
 - HTTPS downloads:
-- https://storage.googleapis.com/clickstream-bigdata-raw/2019-Nov.csv
-- https://storage.googleapis.com/clickstream-bigdata-raw/2019-Oct.csv
+  - `https://storage.googleapis.com/clickstream-bigdata-raw/2019-Oct.csv`
+  - `https://storage.googleapis.com/clickstream-bigdata-raw/2019-Nov.csv`
 
 Download with the helper script (defaults to the public bucket and downloads into `data/raw`, which is git-ignored):
 
@@ -357,3 +378,5 @@ Option B: Bring your own dataset
 2) Ensure filenames match `dataset.file_pattern` in `config.yaml` (default: `{month}.csv`).
 3) Run the pipeline as usual.
 
+Note for private/custom buckets: authenticate first with `gcloud auth login` (and
+`gcloud auth application-default login` if using ADC-based tools).

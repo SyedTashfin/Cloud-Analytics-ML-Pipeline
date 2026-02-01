@@ -15,7 +15,7 @@ export PYTHONPATH
 
 .PHONY: venv deps setup check_venv env_check clean_interim clean_processed \
 	download_data verify_raw to_parquet build_features train evaluate plots \
-	dashboard_data dashboard rerun_from_parquet rerun_all_force smoke \
+	dashboard_data dashboard run_all all rerun_from_parquet rerun_all_force smoke \
 	gcp_auth_check gcp_setup gcp_upload_raw gcp_package gcp_to_parquet \
 	gcp_build_features gcp_train gcp_evaluate gcp_plots gcp_run_all
 
@@ -78,12 +78,23 @@ rerun_from_parquet:
 	$(MAKE) evaluate
 	$(MAKE) plots
 
+run_all:
+	$(MAKE) to_parquet
+	$(MAKE) build_features
+	$(MAKE) train
+	$(MAKE) evaluate
+	$(MAKE) plots
+	$(MAKE) dashboard_data
+
+all: run_all
+
 rerun_all_force:
 	$(MAKE) to_parquet FORCE=1
 	$(MAKE) build_features FORCE=1
 	$(MAKE) train
 	$(MAKE) evaluate
 	$(MAKE) plots
+	$(MAKE) dashboard_data FORCE=1
 
 smoke: verify_raw
 	$(PYTHON_VENV) -m clickstream.pipelines.to_parquet --config $(CONFIG) \

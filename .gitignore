@@ -1,6 +1,8 @@
 .DS_Store
 .venv/
 data/
+data/raw/
+data/processed/
 
 # Dataset outputs
 datasets/
