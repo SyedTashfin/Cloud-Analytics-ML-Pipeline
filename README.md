@@ -23,6 +23,11 @@ evaluates a baseline conversion model, and exports lightweight aggregates for a
 Streamlit dashboard. The project supports local execution and Google Cloud
 Dataproc Serverless with a consistent configuration model.
 
+## Recruiter snapshot
+- Shows end-to-end data engineering maturity: ingestion, feature engineering, model training, reporting, and dashboard export
+- Strong cloud parity story with local and GCP execution paths driven by config
+- Good signal for analytics engineering, data platform, and ML pipeline roles
+
 ## Highlights
 
 - Spark-based ingestion with schema enforcement and parquet partitioning
