@@ -9,6 +9,8 @@
 Case study docs: [EN](docs/case-study.md) • [FR](docs/case-study.fr.md)  
 Quick one‑pager: [EN](docs/one-pager.md) • [FR](docs/one-pager.fr.md)
 
+**Full case study:** [Cloud Analytics ML Pipeline](https://syedtashfin.com/case-studies/cloud-analytics-ml-pipeline).
+
 ## Why this exists / What problem it solves
 
 - Local analytics pipelines often drift from cloud outputs, breaking trust in dashboards.
